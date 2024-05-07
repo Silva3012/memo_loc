@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memo_loc/models/place.dart';
+import 'package:memo_loc/screens/place_detail.dart';
 
 class PlacesList extends StatelessWidget {
   const PlacesList({super.key, required this.places});
@@ -24,11 +25,17 @@ class PlacesList extends StatelessWidget {
       itemBuilder: (context, index) => ListTile(
         title: Text(
           places[index].title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: Theme.of(context).colorScheme.onBackground),
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
         ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PlaceDetailScreen(place: places[index]),
+            ),
+          );
+        },
       ),
     );
   }
