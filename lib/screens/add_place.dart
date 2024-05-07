@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:memo_loc/providers/user_places.dart';
+import 'package:memo_loc/widgets/image_input.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
@@ -36,6 +37,13 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 color: Theme.of(context).colorScheme.onBackground,
               ),
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ImageInput(),
             const SizedBox(
               height: 16,
             ),
