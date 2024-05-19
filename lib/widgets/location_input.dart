@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:memo_loc/models/place.dart';
+import 'package:memo_loc/screens/map.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key, required this.onSelectLocation});
@@ -64,7 +66,7 @@ class _LocationInputState extends State<LocationInput> {
               label: const Text('Get Current Location'),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: const Icon(Icons.map),
               label: const Text('Select on Maps'),
             ),
@@ -118,16 +120,34 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
+    _savePlace(lat, lng);
+  }
+
+  void _selectOnMap() async {
+    final pickedLocation = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(
+        builder: (context) => const MapScreen(),
+      ),
+    );
+
+    if (pickedLocation == null) {
+      return;
+    }
+
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
+  }
+
+  Future<void> _savePlace(double latitude, double longitude) async {
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=AIzaSyAnwUqRzIuCOAhFnBkHVNMfsrXoQ_wbkss');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=AIzaSyAnwUqRzIuCOAhFnBkHVNMfsrXoQ_wbkss');
     final response = await http.get(url);
     final responseData = json.decode(response.body);
     final address = responseData['results'][0]['formatted_address'];
 
     setState(() {
       _pickedLocation = PlaceLocation(
-        latitude: lat,
-        longitude: lng,
+        latitude: latitude,
+        longitude: longitude,
         address: address,
       );
       _isGettingLocation = false;
